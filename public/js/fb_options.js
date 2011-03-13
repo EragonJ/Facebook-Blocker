@@ -8,8 +8,8 @@ function set_fb_list() {
     var v = $(this).val();
 
     // No blank line here
-    if ( v.match(/^\s$/) ) {
-      return false;
+    if (is_empty(v)) {
+      return true;
     }
 
     fb_list.push( $(this).val() );
@@ -18,14 +18,55 @@ function set_fb_list() {
   set_ls("fb_list", fb_list);
 }
 
-function ui_input_focus () {
-  var $all_black_list   = $(".black_list_each");
-  var $last_black_list  = $all_black_list.last();
-  var $other_black_list = $all_black_list.not(":last");
+function find_empty_fb_list_index() {
+  var index = -1;
+
+  $(".fb_list").each(function(i) {
+
+    var v = $(this).val();
+    if (is_empty(v)) {
+      index = i;
+      return false;
+    }
+  });
+
+  return index;
+}
+
+function is_empty(v) {
+  if (is_matched(v, /^\s*$/)) {
+    return true;
+  }
+  return false;
+}
+
+function is_matched(v, regex) {
+  if (v.match(regex)) {
+    return true;
+  }
+  return false;
+}
+
+function get_focus_input() {
+  return $(".fb_list:focus");
+}
+
+function ui_input_focus (option) {
+  if (option == 0) {
+    $(".fb_list").focus();
+  }
+  else if (option == 1) {
+    $(".fb_list:last").focus();
+  }
+
+  var $focus_input = get_focus_input();
+  
+  var $all_black_list = $(".black_list_each");
+  var $focus_black_list = $focus_input.parent();
+  var $other_black_list = $all_black_list.not($focus_black_list);
 
   $other_black_list.removeClass("focus");
-  $last_black_list.addClass("focus");
-  $last_black_list.find("input").focus();
+  $focus_black_list.addClass("focus");
 }
 
 /*
@@ -55,7 +96,7 @@ $(document).ready(function() {
     $("#black_list").append($new_list);
   }
 
-  ui_input_focus();
+  ui_input_focus(0);
 
   /* 
    * Event settings below 
@@ -70,7 +111,7 @@ $(document).ready(function() {
     var new_list = $template.clone();
     $("#black_list").append(new_list);
 
-    ui_input_focus();
+    ui_input_focus(1);
   }); 
 
   $(".delete_button").live('click', function(){
@@ -79,15 +120,53 @@ $(document).ready(function() {
 
     $list.fadeOut("fast", function() {
       $(this).remove();
-      ui_input_focus();
+      ui_input_focus(1);
     });
 
   });
 
-  // if user press enter in input
   $(".fb_list").live('keydown', function(e) {
-    if ('13' == e.which) {
-      $("#add_button").trigger('click');
+
+    var $focus_input = get_focus_input();
+
+    // If the user pressed TAB without SHIFT
+    if ('9'  == e.which && !e.shiftKey) {
+
+      e.preventDefault();
+      var index = find_empty_fb_list_index();
+
+      // If there are still some blank inputs left, we will focus on the toppest one.
+      if (index != -1) {
+        $(".fb_list").eq(index).focus();
+      }
+      else {
+        $("#add_button").trigger('click');
+      }
+      ui_input_focus();
+    }
+    // If the user pressed TAB with SHIFT
+    else if ('9' == e.which && e.shiftKey) {
+      $(".fb_list").each(function(i) {
+
+        e.preventDefault();
+        if ($focus_input.equals($(this))) {
+
+          var next_i = ((i - 1) < 0) ? ($(".fb_list").size() - 1) : (i - 1);
+          $(".fb_list").eq(next_i).focus();
+          ui_input_focus();
+        }
+      });
+    }
+    // If the user pressed C with SHIFT
+    else if ('67' == e.which && e.shiftKey) {
+
+      e.preventDefault();
+      $focus_input.parent().find('.delete_button').trigger('click');
+    }
+    // If the user pressed ENTER
+    else if ('13' == e.which) {
+
+      $("#done").trigger('click'); 
     }
   });
 
