@@ -125,50 +125,7 @@ $(document).ready(function() {
 
   });
 
-  $(".fb_list").live('keydown', function(e) {
-
-    var $focus_input = get_focus_input();
-
-    // If the user pressed TAB without SHIFT
-    if ('9'  == e.which && !e.shiftKey) {
-
-      e.preventDefault();
-      var index = find_empty_fb_list_index();
-
-      // If there are still some blank inputs left, we will focus on the toppest one.
-      if (index != -1) {
-        $(".fb_list").eq(index).focus();
-      }
-      else {
-        $("#add_button").trigger('click');
-      }
-      ui_input_focus();
-    }
-    // If the user pressed TAB with SHIFT
-    else if ('9' == e.which && e.shiftKey) {
-      $(".fb_list").each(function(i) {
-
-        e.preventDefault();
-        if ($focus_input.equals($(this))) {
-
-          var next_i = ((i - 1) < 0) ? ($(".fb_list").size() - 1) : (i - 1);
-          $(".fb_list").eq(next_i).focus();
-          ui_input_focus();
-        }
-      });
-    }
-    // If the user pressed C with SHIFT
-    else if ('67' == e.which && e.shiftKey) {
-
-      e.preventDefault();
-      $focus_input.parent().find('.delete_button').trigger('click');
-    }
-    // If the user pressed ENTER
-    else if ('13' == e.which) {
-
-      $("#done").trigger('click'); 
-    }
-  });
+  $(".fb_list").live('keydown', option_keydown);
 
   $("#done").click(function() {
 

@@ -1,0 +1,33 @@
+/*
+ * about invisible-toggle-button UI
+ */
+.FBBK-invisible {
+  position: relative;
+  background: #EEE;
+}
+
+.FBBK-invisible-toggle-button {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  right: -18px;
+  bottom: 2px;
+  background-image: url(chrome-extension://bgmgplanklihaohdgcffkjpdbbfdekih/public/images/famfamfam/lock.png);
+}
+
+.FBBK-invisible-after-toggle {
+  right: 2px;
+  background-image: url(chrome-extension://bgmgplanklihaohdgcffkjpdbbfdekih/public/images/famfamfam/lock_open.png);
+}
+
+.FBBK-invisible-toggle-button:hover {
+  cursor: pointer;
+}
+
+.FBBK-invisible-toggle-tips {
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+  font-family: 微軟正黑體, Verdana;
+}
