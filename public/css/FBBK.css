@@ -13,12 +13,12 @@
   position: absolute;
   right: -18px;
   bottom: 2px;
-  background-image: url(chrome-extension://bgmgplanklihaohdgcffkjpdbbfdekih/public/images/famfamfam/lock.png);
+  background-image: url(chrome-extension://ieohahnnccniajelojoanhpfppgincod/public/images/famfamfam/lock.png);
 }
 
 .FBBK-invisible-after-toggle {
   right: 2px;
-  background-image: url(chrome-extension://bgmgplanklihaohdgcffkjpdbbfdekih/public/images/famfamfam/lock_open.png);
+  background-image: url(chrome-extension://ieohahnnccniajelojoanhpfppgincod/public/images/famfamfam/lock_open.png);
 }
 
 .FBBK-invisible-toggle-button:hover {
