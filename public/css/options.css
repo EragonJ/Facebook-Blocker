@@ -33,3 +33,11 @@ body {
 #title {
   text-align: center;
 }
+
+#upload_group {
+  display: inline-block;
+}
+
+.upload_group_toggle {
+  display: none;
+}
