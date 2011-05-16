@@ -1,31 +1,23 @@
 /*
- *  Local Storage["fb_list"] 的 Setter
+ *  fb_list setter
  */
-function set_fb_list( user_config ) {
+function set_fb_list() {
   var fb_list = [];
 
-  if ( user_config ) {
-    fb_list = user_config;
-  }
-  else {
-    $(".fb_list").each(function() {
-      var v = $(this).val();
+  $(".fb_list").each(function() {
+    var v = $(this).val();
 
-      // No blank line here
-      if (is_empty(v)) {
-        return true;
-      }
+    // No blank line here
+    if (is_empty(v)) {
+      return true;
+    }
 
-      fb_list.push( $(this).val() );
-    });
-  }
+    fb_list.push( $(this).val() );
+  });
 
   set_ls("fb_list", fb_list);
 }
 
-/*
- * 尋找 .fb_list 中的空白 input，可以讓使用者在 TAB 時跳到該 input 去做輸入的動作。
- */
 function find_empty_fb_list_index() {
   var index = -1;
 
@@ -41,9 +33,6 @@ function find_empty_fb_list_index() {
   return index;
 }
 
-/*
- *  判斷值是否全部都是空白，擴充於 is_matched function
- */
 function is_empty(v) {
   if (is_matched(v, /^\s*$/)) {
     return true;
@@ -51,9 +40,6 @@ function is_empty(v) {
   return false;
 }
 
-/*
- *  包裝 Regex match 的 function
- */
 function is_matched(v, regex) {
   if (v.match(regex)) {
     return true;
@@ -84,59 +70,7 @@ function ui_input_focus (option) {
 }
 
 /*
- * 透過 HTML5 File API 來讀取使用者的 config，目前並沒有做到檢查其正確性的部分，
- * 只有簡單的 File I/O 會發生問題的警示，以後要記得更新。（目前 Google Chrome 的
- * popup 在這個部份會有問題，當上載視窗出現時會直接關閉整個 popup ，所以暫時不使
- * 用 read_file 的方式，改用 read_config。
- */
-function read_file(file) {
-  var reader = new FileReader();
-
-  reader.onload = function(e) {
-
-    var config = read_config( e.target.result );
-
-    if (typeof config != 'undefined') {
-      set_fb_list( config )
-      location.reload();
-    }
-  };
-
-  reader.onerror = function(e) {
-    var error_message = "Error happened when accessing your files !\n" +
-                        "please tell me about the details to eragonj@eragonj.me or \n" +
-                        "go to Google Chrome Extension \\ search 'Facebook blocker' and leave comments !" +
-                        "Thanks for your helps";
-
-    alert(error_message);
-  }
-
-  reader.readAsText(file);
-}
-
-/*
- *  read_config 處理的 content 是一個 string ，供 read_file 使用。
- */
-function read_config( content ) {
-
-  var config;
-
-  try {
-    config = JSON.parse( content );
-  }
-  catch(e) { 
-    var error_message = "Your config file is not the same type with Facebook Blocker !\n" +
-                        "This situation often happens when modifying your config or upload the wrong file.\n" +
-                        "In this way, please try uploading again or type by yourself !";
-
-    alert(error_message);
-  }
-
-  return config;
-}
-
-/*
- *  Main function
+ *  main
  */
 $(document).ready(function() {
 
@@ -193,29 +127,9 @@ $(document).ready(function() {
 
   $(".fb_list").live('keydown', option_keydown);
 
-  /*
-   * [UI] 送出按鈕的點擊
-   */
   $("#done").click(function() {
+
     set_fb_list();
     window.close();
   });
-
-  /*
-   * [UI] 
-   */
-  $("#upload, #upload_done").click(function() {
-    $("#upload_group > *").toggleClass('upload_group_toggle');
-    $("#config").focus();
-  });
-
-  /*
-   * [UI] 當使用者點擊 upload_done 的時候就會載入 config 並設定於 LocalStorage
-   */
-  $("#upload_done").click(function() {
-    var config = $("#config").val();
-    set_fb_list( read_config( config ) );
-    location.reload();
-  });
-
 });
