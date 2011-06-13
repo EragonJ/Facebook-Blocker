@@ -1,38 +1,38 @@
 {
-  "name": "Facebook Blocker",
-  "version": "1.0.5",
-  "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
-  "permissions": [
-    "tabs"
-  ],
-  "icons": { 
-    "16": "public/images/16.png", 
-    "48": "public/images/48.png", 
-    "128": "public/images/128.png"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "http://www.facebook.com/*", 
-        "https://www.facebook.com/*"
-      ],
-      "js": [
-        "public/js/jquery-1.4.2.min.js",
-        "public/js/fb_generic.js",
-        "public/js/fb_main.js"
-      ],
-      "css": [
-        "public/css/FBBK.css"
-      ],
-      "run_at": "document_idle",
-      "all_frames" : false
-    }
-  ],
-  "browser_action" : {
-    "default_icon" : "public/images/16.png",
-    "default_title" : "Facebook Blocker Options",
-    "default_popup" : "options.html"
-  },
-  "options_page": "options.html",
-  "background_page" : "background.html"
+    "name": "Facebook Blocker",
+    "version": "1.0.6",
+    "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
+    "permissions": [
+        "tabs"
+    ],
+    "icons": { 
+        "16": "public/images/16.png", 
+        "48": "public/images/48.png", 
+        "128": "public/images/128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*.facebook.com/*", 
+                "https://*.facebook.com/*"
+            ],
+            "js": [
+                "public/js/jquery-1.4.2.min.js",
+                "public/js/fb_generic.js",
+                "public/js/fb_main.js"
+            ],
+            "css": [
+                "public/css/FBBK.css"
+            ],
+            "run_at": "document_idle",
+            "all_frames" : false
+        }
+    ],
+    "browser_action" : {
+        "default_icon" : "public/images/16.png",
+        "default_title" : "Facebook Blocker Options",
+        "default_popup" : "popup.html"
+    },
+    "options_page": "options.html",
+    "background_page" : "background.html"
 }
