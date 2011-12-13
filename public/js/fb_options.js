@@ -88,7 +88,14 @@ var Option = function() {
             description: 'Display Lock Icon when messages are locked. <p> (<b>ATTENTION</b> : If you disables it, you will not be able to unlock the message !) </p>', 
             default : true
         },
-        { 
+        {
+            id : 'ignoreCaseSensitive',
+            info : 'Ignore Case Sensitive',
+            description : 'Enable this to make case insensitive. <p> ( Example : If you enables this, pattern - "Dog" will match any word like "DOG" / "dog" / "DoG".)',
+            default : false
+        }
+
+/*        { 
             id : 'enableRE', 
             info : 'Enable Regular Expression', 
             description : 'This option is still under development', 
@@ -99,7 +106,8 @@ var Option = function() {
             info : 'Enable HotKey', 
             description : 'This option is still under development',
             default : true 
-        }
+        }*/
+
     ];
 
     // User selected options

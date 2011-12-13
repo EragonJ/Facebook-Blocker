@@ -108,7 +108,12 @@ FBBK.prototype = {
                 var $stories = $('.uiStreamStory, .mall_post');
 
                 $stories.each(function() {
-                    var reg = new RegExp( pattern );
+
+
+                    // this is flag i 
+                    var flag = ( that.isUserOptioned('ignoreCaseSensitive') ) ? 'i' : '';
+
+                    var reg = new RegExp( pattern , flag );
 
                     // We have to check the FBBK-invisible 
                     if ( $(this).html().match( reg ) && !$(this).data('FBBK-invisible') ) {
