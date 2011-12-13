@@ -160,6 +160,7 @@ Option.prototype = {
             // can't trigger here !? weird
             toggle( $( '#' + id ).parent( 'label' ) );
         });
+
     },
 
     createOption : function() {
@@ -185,6 +186,6 @@ Option.prototype = {
             checkedIDs.push( $(this).attr('id') );
         })
 
-        set_ls( 'userOptions', JSON.stringify( checkedIDs ) ); 
+        set_ls('userOptions', JSON.stringify( checkedIDs ) ); 
     }
 };

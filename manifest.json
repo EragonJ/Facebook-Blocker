@@ -1,6 +1,6 @@
 {
     "name": "Facebook Blocker",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
     "permissions": [
         "tabs"
