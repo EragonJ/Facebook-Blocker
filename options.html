@@ -4,27 +4,30 @@
     <head>
         <title></title>
         <link rel="stylesheet" href="public/css/options.css" type="text/css" media="screen" charset="utf-8">
+        <link rel="stylesheet" href="public/css/tipsy.css" type="text/css" media="screen" charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script src="public/js/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="public/js/jquery.tipsy.js" type="text/javascript" charset="utf-8"></script>
         <script src="public/js/fb_generic.js"></script>
         <script src="public/js/fb_options.js"></script>
     </head>
     <body>
         <div id="header">
-            <img src="/public/images/128.png" />
+            <a href="http://eragonj.hax4.in/blog/js-facebook-blocker.html" target="_blank" title="Leave Comments to EragonJ" class="tipsy-item"><img src="/public/images/128.png" /></a>
             <p> Facebook Blocker Options List</p>
         </div>
         <div id="wrapper">
             <form>
                 <div class="option-body">
-                    <div>
+                    <div class="tipsy-item">
                         <label class="checkbox-off">
-                            <input type="checkbox" id="enableRE"/><span>Enable Regular Expression</span>
+                            <input type="checkbox"/><span></span>
                         </label>
                     </div>
                 </div>
                 <div class="option-footer">
-                    <input type="reset" id="reset" value="Reset" />
+                    <input type="button" id="default" value="Default Values" />
+                    <input type="reset"  id="reset" value="Reset" />
                     <input type="button" id="done" value="Done"/>
                 </div>
             </form>

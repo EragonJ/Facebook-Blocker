@@ -4,22 +4,39 @@ $(document).ready(function() {
     o.renderOption();
 
     $('label').click( function() {
-        console.log('x');
         toggle( $(this) );
     })
 
+    $('#default').click( function() {
+        if ( confirmNext() ) {
+            o.defaultOption();
+        }
+    });
+
     $('#reset').click( function() {
-        nonCheckEffect(  $('label') );
+        if ( confirmNext() ) {
+            nonCheckEffect( $('label') );
+        }
     });
 
     $('#done').click( function() {
         o.setOptionsToLocalStorage();
-        // chrome.tabs.remove();
-        window.close();
+        closeWindow();
     })
 
-    // load from localstorage and insert values inside mapping selector
+    $('.tipsy-item').tipsy({ gravity : 'w' });
 });
+
+function closeWindow() {
+
+    // Workaround to help us close window
+    window.open('', '_self', '');
+    window.close();
+}
+
+function confirmNext() {
+    return confirm(' Are you sure? '); 
+}
 
 function toggle( $label ) {
 
@@ -63,10 +80,25 @@ function clearCheckEffect( $label ) {
 
 var Option = function() {
 
-    // TODO: finish group feature
+    // TODO: finish group
     this.optionSettings = [ 
-        { id : 'enableRE', info : 'Enable Regular Expressiong' },
-        { id : 'enableHotKey', info : 'Enable HotKey' }
+        { 
+            id : 'enableRE', 
+            info : 'Enable Regular Expression', 
+            description : 'If blah blah', 
+            default : true 
+        },
+        { 
+            id : 'enableHotKey', 
+            info : 'Enable HotKey', 
+            default : true 
+        },
+        { 
+            id : 'enableUILock', 
+            info : 'Show Lock Icon', 
+            description: 'Display Lock Icon when messages are blocked', 
+            default : true
+        } 
     ];
 
     // User selected options
@@ -77,11 +109,37 @@ var Option = function() {
 
 Option.prototype = {
 
-    renderOption : function() {
+    defaultOption : function() {
         var settings = this.getOptionSettings();
-        var $div = this.createOption();
+        var that = this;
 
         $.each( settings, function(i, obj) {
+            var $input = $( '#' + obj.id );
+            var $label = $input.parent('label');
+
+            if ( obj['default'] === true ) {
+                $input.attr('checked', 'checked');
+                checkEffect( $label );
+            }
+            else {
+                $input.attr('checked', '');    
+                nonCheckEffect( $label );
+            }
+        });
+    },
+
+    renderOption : function() {
+
+        var settings = this.getOptionSettings();
+        var that = this;
+
+        $.each( settings, function(i, obj) {
+
+            var $div = that.createOption();
+
+            if ( obj.description ) {
+                $div.attr( 'title', obj.description );
+            }
 
             $div.find( 'input' ).attr( 'id', obj.id );
             $div.find( 'span' ).html( obj.info ) ; 
@@ -100,7 +158,7 @@ Option.prototype = {
     },
 
     getOptionTemplate : function() {
-        return $('div.option-body div:first').clone().remove();
+        return $('div.option-body div:first').remove().clone();
     },
 
     getOptionSettings : function() {
@@ -108,7 +166,7 @@ Option.prototype = {
     },
 
     getOptionsFromLocalStorage : function() {
-        return ( get_ls('options') !== undefined ) ? JSON.parse( get_ls('options') ) : [];
+        return ( get_ls('userOptions') !== undefined ) ? JSON.parse( get_ls('userOptions') ) : [];
     },
 
     setOptionsToLocalStorage : function() {
@@ -118,6 +176,6 @@ Option.prototype = {
             checkedIDs.push( $(this).attr('id') );
         })
 
-        set_ls( 'options', JSON.stringify( checkedIDs ) ); 
+        set_ls( 'userOptions', JSON.stringify( checkedIDs ) ); 
     }
 };

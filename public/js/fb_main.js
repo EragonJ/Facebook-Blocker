@@ -1,85 +1,170 @@
-var kill_list = [];
+var FBBK = function() {
 
-/* Function */
-function add_list (pattern) {
-    var _f = function(pattern) {
-        return function() {
+    this.userOptions = [];
 
-            // Support personal timeline, friend's timeline and group timeline ( <LI> elements )
-            var $stories = $(".uiStreamStory, .mall_post");
-
-            $stories.each(function() {
-                var reg = new RegExp(pattern);
-
-                // We have to check the FBBK-invisible 
-                if ( $(this).html().match(reg) && !$(this).data('FBBK-invisible') ) {
-
-                    // Facebook uses a <LI> to wrap a <DIV> element
-                    $(this).children(':first-child').fadeOut('slow');
-
-                    $(this).addClass('FBBK-invisible')
-                                 .data('FBBK-invisible',true)
-                                 .append(FBBK.html_helper('invisible-toggle-button'))
-                                 .append(FBBK.html_helper('invisible-toggle-tips'));
-
-                    $(this).children('.FBBK-invisible-toggle-tips').html('Keyword Detected - <b>' + pattern + '</b>');
-
-                    // Tell the background.html to update the badgeText
-                    chrome.extension.sendRequest({ method : "get_blocked_message" });
-                }
-            });
-        };
-    };
-
-    kill_list.push( _f(pattern) );
-}
-
-function kill(pattern) {
-    // Array
-    if (typeof pattern == "object" && pattern.length) {
-        for (var i = 0; i < pattern.length; i++) {
-            add_list(pattern[i]);
-        }
-    }
-    // String
-    else {
-        add_list(pattern);
-    }
-    
-    for (var i = 0; i < kill_list.length; i++) {
-        window.setInterval(kill_list[i], 1000);
-    }
-}
-
-/* Main */
-function main() {
+    this.blockPatterns = [];
 
     // communicate with the background page to get the fb_list
-    chrome.extension.sendRequest({ method : "get_fb_list" }, function (response) {
-        if (response["fb_list"]) {
-            kill(response["fb_list"]);
-        }
-    });
+    this.blockFunctions = [];
 
-    // UI part
-    $("div.FBBK-invisible-toggle-button").live('click', function() {
-
-        var $_this = $(this);
-        var $_parent = $_this.parent();
-        var $invisible_div  = $_parent.children(':first-child');
-        var $invisible_tips = $_parent.children('.FBBK-invisible-toggle-tips'); 
-
-        $invisible_tips.toggle('fast');
-        
-        $invisible_div.toggle('fast', function(){ 
-            $_this.toggleClass('FBBK-invisible-after-toggle');
-
-            var attr_title = $_this.attr('title');
-            $_this.attr('title', (attr_title == 'lock') ? 'unlock' : 'lock');
-        });
-
-    });
+    this.htmlTemplate = { 
+        'lockBlock' : '<div class="FBBK-lockBlock"></div>',
+        'lockUI'    : '<div class="FBBK-lockUI" title="unlock"></div>',
+        'lockTips'  : '<div class="FBBK-lockTips"></div>'
+    };
 
 };
 
-main();
+FBBK.prototype = {
+
+    isUserOptioned : function( key ) {
+        return ( $.inArray( key, this.userOptions) !== -1 ) ? true : false;
+    },
+
+    processBlockPatterns : function() {
+
+        var patterns = this.blockPatterns;
+
+        // Array
+        if ( $.isArray( patterns ) ) {
+            for (var i = 0; i < patterns.length; i++) {
+                this.addBlockFunction( patterns[i] );
+            }
+        }
+        // String
+        else {
+            this.addBlockFunction( patterns );
+        }
+    },
+
+    addBlockFunction : function( pattern ) {
+
+        var _f = this.wrapBlockFunction( pattern );
+
+        this.blockFunctions.push( _f );
+    },
+
+    wrapBlockFunction : function( pattern ) {
+
+        var that = this;
+        var _f = function( pattern ) {
+
+            return function() {
+
+                // Support personal timeline, friend's timeline and group timeline ( <LI> elements )
+                var $stories = $('.uiStreamStory, .mall_post');
+
+                $stories.each(function() {
+                    var reg = new RegExp( pattern );
+
+                    // We have to check the FBBK-invisible 
+                    if ( $(this).html().match( reg ) && !$(this).data('FBBK-invisible') ) {
+
+                        // Facebook uses a <LI> to wrap a <DIV> element
+                        $(this).children('.storyContent').fadeOut('slow');
+
+                        $(this).prepend( that.htmlHelper('lockBlock') );
+
+                        $(this).addClass('FBBK-invisible')
+                               .data('FBBK-invisible', true);
+
+                        var $lockBlock = $(this).children('.FBBK-lockBlock');
+                        $lockBlock.append( that.htmlHelper('lockTips') );
+
+                        if ( that.isUserOptioned( 'enableUILock' ) ) {
+                            $lockBlock.append( that.htmlHelper('lockUI') );
+                        }
+
+                        $lockBlock.children('.FBBK-lockTips').html('Keyword Detected - <b>' + pattern + '</b>');
+
+                        chrome.extension.sendRequest({ method : 'updateBadgeText' });
+                    }
+                });
+            };
+
+        }( pattern );
+
+        return _f;
+    },
+
+    htmlHelper : function( arg ) {
+        return this.htmlTemplate[ arg ];
+    },
+
+    bindUIEvents : function() {
+        //TODO: add more UI parts here
+        this.bindUILockClickEvent();
+    },
+
+    bindUILockClickEvent : function() {
+
+        // TODO: Fix this with option.html 
+        if ( !this.isUserOptioned( 'enableUILock' ) ) {
+            return;
+        }
+
+        $('div.FBBK-lockUI').live('click', function() {
+
+            var $this = $(this);
+            var $parent = $this.parentsUntil('.uiStreamStory, .mall_post').parent(); // jQuery's magic
+
+            var $invisible_div  = $parent.children('.storyContent');
+            var $invisible_tips = $parent.children('.FBBK-lockTips'); 
+
+            $invisible_tips.toggle('fast');
+            
+            $invisible_div.toggle('fast', function(){ 
+                $this.toggleClass('FBBK-lockOpenUI');
+
+                var attr_title = $this.attr('title');
+                $this.attr('title', (attr_title == 'lock') ? 'unlock' : 'lock');
+            });
+        });
+    },
+
+    exec : function() {
+
+        //TODO: we can put some initialization parts before preRequest(),
+        //      but that must with no relationship between chrome.extension.sendRequest 
+
+        this.preRequest();
+    },
+
+    preRequest : function( ) {
+
+        var that = this;
+
+        // Get user options first
+        chrome.extension.sendRequest( { method : 'get_user_options' }, function (response) {
+
+            if ( response['userOptions'] ) {
+                that.userOptions = response['userOptions'];
+            }
+
+            // Get blocked sentences second
+            chrome.extension.sendRequest( { method : 'get_fb_list' }, function (response) {
+
+                if ( response['fb_list'] ) {
+                    that.blockPatterns = response['fb_list'];
+                }
+
+                that.afterRequest();
+            });
+        });
+    },
+
+    afterRequest : function () {
+        this.bindUIEvents();
+        this.processBlockPatterns();
+        this.startBlocking();
+    },
+
+    startBlocking : function() {
+        for (var i = 0; i < this.blockFunctions.length; i++) {
+            window.setInterval( this.blockFunctions[i], 1000 );
+        }
+    },
+};
+
+var fbbk = new FBBK();
+fbbk.exec();
