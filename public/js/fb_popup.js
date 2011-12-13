@@ -2,56 +2,54 @@
  *  fb_list setter
  */
 function set_fb_list() {
+
     var fb_list = [];
 
     $(".fb_list").each(function() {
-        var v = $(this).val();
+
+        var eachPattern = $(this).val();
+        var v = new Validator( eachPattern );
 
         // No blank line here
-        if (is_empty(v)) {
-            return true;
+        if ( v.isEmpty() ) {
+            return false;
         }
 
-        fb_list.push( $(this).val() );
+        fb_list.push( eachPattern );
     });
 
     set_ls("fb_list", fb_list);
 }
 
+/*
+ *  This function is used by fb_keyboard.js 
+ *  TODO : extract from fb_popup.js later
+ */
 function find_empty_fb_list_index() {
+
     var index = -1;
 
     $(".fb_list").each(function(i) {
 
-        var v = $(this).val();
-        if (is_empty(v)) {
+        var eachPattern = $(this).val();
+        var v = new Validator( eachPattern );
+
+        if ( v.isEmpty() ) {
+
             index = i;
-            return false;
+            return false; // Break the $.each loop
         }
     });
 
     return index;
 }
 
-function is_empty(v) {
-    if (is_matched(v, /^\s*$/)) {
-        return true;
-    }
-    return false;
-}
-
-function is_matched(v, regex) {
-    if (v.match(regex)) {
-        return true;
-    }
-    return false;
-}
-
 function get_focus_input() {
     return $(".fb_list:focus");
 }
 
-function ui_input_focus (option) {
+function ui_input_focus(option) {
+
     if (option == 0) {
         $(".fb_list").focus();
     }
@@ -101,7 +99,6 @@ $(document).ready(function() {
     /* 
      * Event settings below 
      */
-
     $("a").click(function(e) {
         e.preventDefault();
     });

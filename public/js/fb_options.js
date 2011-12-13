@@ -24,7 +24,7 @@ $(document).ready(function() {
         closeWindow();
     })
 
-    $('.tipsy-item').tipsy({ gravity : 'w' });
+    $('.tipsy-item').tipsy({ gravity : 'w' , html : true });
 });
 
 function closeWindow() {
@@ -83,22 +83,23 @@ var Option = function() {
     // TODO: finish group
     this.optionSettings = [ 
         { 
+            id : 'enableUILock', 
+            info : 'Enable Lock UI', 
+            description: 'Display Lock Icon when messages are locked. <p> (<b>ATTENTION</b> : If you disables it, you will not be able to unlock the message !) </p>', 
+            default : true
+        },
+        { 
             id : 'enableRE', 
             info : 'Enable Regular Expression', 
-            description : 'If blah blah', 
+            description : 'This option is still under development', 
             default : true 
         },
         { 
             id : 'enableHotKey', 
             info : 'Enable HotKey', 
+            description : 'This option is still under development',
             default : true 
-        },
-        { 
-            id : 'enableUILock', 
-            info : 'Show Lock Icon', 
-            description: 'Display Lock Icon when messages are blocked', 
-            default : true
-        } 
+        }
     ];
 
     // User selected options

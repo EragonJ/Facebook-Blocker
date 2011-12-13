@@ -1,12 +1,42 @@
+/*
+ *  FBBK - a.k.a FaceBook BlocKer
+ *
+ *      This is the main script that blocks user-defined patterns.
+ *
+ *      @Author EragonJ<eragonj@eragonj.me>
+ */
 var FBBK = function() {
 
+    /*
+     *  userOptions -
+     *      It stores options that user checked on options.html .
+     *
+     *  @var array
+     */
     this.userOptions = [];
 
+    /*
+     *  blockPatterns -
+     *      It stores patterns be blocked later set on popup.html .
+     *
+     *  @var array
+     */
     this.blockPatterns = [];
 
-    // communicate with the background page to get the fb_list
+    /*
+     *  blockFunctions -
+     *      It communicates with the background page to get fb_list.
+     *
+     *  @var array
+     */
     this.blockFunctions = [];
 
+    /*
+     *  htmlTemplate -
+     *      It stores necessary HTML.
+     *
+     *  @var JSON
+     */
     this.htmlTemplate = { 
         'lockBlock' : '<div class="FBBK-lockBlock"></div>',
         'lockUI'    : '<div class="FBBK-lockUI" title="unlock"></div>',
@@ -17,33 +47,56 @@ var FBBK = function() {
 
 FBBK.prototype = {
 
-    isUserOptioned : function( key ) {
-        return ( $.inArray( key, this.userOptions) !== -1 ) ? true : false;
+    /*
+     *  isUserOptioned -
+     *      It will grep out matched option from userOptions.
+     *
+     *  @param string optionID - optionID is the key stored in userOptions
+     *  @return bool true / false - is matched or not
+     */
+    isUserOptioned : function( optionID ) {
+        return ( $.inArray( optionID, this.userOptions) !== -1 ) ? true : false;
     },
 
+    /*
+     *  processBlockPatterns - 
+     *      It will grep out all blockPatterns and call wrapBlockFunction to make them 
+     *      executable functions and call addBlockFunction to push them into a array 
+     *      which waits for executing.
+     *
+     */
     processBlockPatterns : function() {
 
-        var patterns = this.blockPatterns;
+        var that = this;
 
-        // Array
-        if ( $.isArray( patterns ) ) {
-            for (var i = 0; i < patterns.length; i++) {
-                this.addBlockFunction( patterns[i] );
-            }
-        }
-        // String
-        else {
-            this.addBlockFunction( patterns );
-        }
+        $.each( this.blockPatterns, function(i, pattern) {
+
+            var _f = that.wrapBlockFunction( pattern );
+            that.addBlockFunction( _f );
+        });
     },
 
-    addBlockFunction : function( pattern ) {
-
-        var _f = this.wrapBlockFunction( pattern );
+    /*
+     *  addBlockFunction -
+     *      It will push wrappred functions into blockFunctions array that will be 
+     *      executed later by window.setInterval
+     *
+     *  @param function _f - a wrapped function with user-defined patterns
+     */
+    addBlockFunction : function( _f ) {
 
         this.blockFunctions.push( _f );
     },
 
+    /*
+     *  wrapBlockFunction -
+     *      This is the most important part that blocks user-defined patterns. 
+     *
+     *  TODO: Comment more about this block function and extract something aweful out.
+     *
+     *  @param string pattern - a user-defined pattern
+     *  @return function _f - a wrapped function that can be executed by window.setInterval
+     */
     wrapBlockFunction : function( pattern ) {
 
         var that = this;
@@ -87,18 +140,35 @@ FBBK.prototype = {
         return _f;
     },
 
-    htmlHelper : function( arg ) {
-        return this.htmlTemplate[ arg ];
+    /*
+     *  htmlHelper -
+     *      It will fetch out the HTML with matched tempalate_key. 
+     *
+     *  @param string tempalate_key - key to match the HTML
+     *  @return string this.htmlTemplate[ tempalate_key ] - matched HTML
+     */
+    htmlHelper : function( template_key ) {
+        return this.htmlTemplate[ template_key ];
     },
 
+    /*
+     *  bindUIEvents - 
+     *      It collects all UI events.
+     *
+     */
     bindUIEvents : function() {
-        //TODO: add more UI parts here
+
+        //TODO: add UI Events here
         this.bindUILockClickEvent();
     },
 
+    /*
+     *  bindUILockClickEvent -
+     *      If a user enables 'enalbeUILock' option, then we have to bind related Click Event for it.
+     * 
+     */
     bindUILockClickEvent : function() {
 
-        // TODO: Fix this with option.html 
         if ( !this.isUserOptioned( 'enableUILock' ) ) {
             return;
         }
@@ -122,6 +192,10 @@ FBBK.prototype = {
         });
     },
 
+    /*
+     *  exec -
+     *      It is the entry point.
+     */
     exec : function() {
 
         //TODO: we can put some initialization parts before preRequest(),
@@ -130,6 +204,13 @@ FBBK.prototype = {
         this.preRequest();
     },
 
+    /*
+     *  preRequest -
+     *      We will interact with chrome.extension.* first to get userOptions and blockPatterns
+     *      which are stored in localstorage on background.html . Only when we get these two 
+     *      settings successfuly first will us call afterRequest.
+     *
+     */
     preRequest : function( ) {
 
         var that = this;
@@ -153,16 +234,27 @@ FBBK.prototype = {
         });
     },
 
+    /*
+     *  afterRequest -
+     *      It collects bindUIEvents which sets necessary UI events first and blockFunctions second
+     *      then startBlocking in the end.
+     */
     afterRequest : function () {
+
         this.bindUIEvents();
         this.processBlockPatterns();
         this.startBlocking();
     },
 
+    /*
+     *  startBlocking - 
+     *      It will grep out blockFunctions and call window.setInterval to execute them one by one.
+     */
     startBlocking : function() {
-        for (var i = 0; i < this.blockFunctions.length; i++) {
-            window.setInterval( this.blockFunctions[i], 1000 );
-        }
+
+        $.each( this.blockFunctions, function( i, _f ) {
+            window.setInterval( _f, 1000 );
+        });
     },
 };
 
