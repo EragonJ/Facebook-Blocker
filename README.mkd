@@ -1,0 +1,20 @@
+Introduction
+============
+
+It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook.
+
+[Details on Chrome web store](https://chrome.google.com/webstore/detail/ieohahnnccniajelojoanhpfppgincod)
+
+Version
+=======
+
+1.1.0
+
+Author
+======
+
+EragonJ | 陳佳隆
+
+Email: eragonj@hax4.in | eragonj@eragonj.me
+
+Blog: [My blue nowhere](http://eragonj.hax4.in)
