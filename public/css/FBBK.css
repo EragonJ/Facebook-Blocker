@@ -37,3 +37,12 @@
     display: inline-block;
     font-family: 微軟正黑體, Verdana;
 }
+
+/*
+ *  This is a workaround to make users won't feel the lag because of insufficient supports on 
+ *  content_script > run_at feature. In order to make users happy, I have to hide the ticker 
+ *  first, and check whether users really disabled this feature later.
+ */
+#pagelet_rhc_ticker {
+    display: none;
+}

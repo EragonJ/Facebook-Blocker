@@ -93,6 +93,13 @@ var Option = function() {
             info : 'Ignore Case Sensitive',
             description : 'Enable this to make case insensitive. <p> ( Example : If you enables this, pattern - "Dog" will match any word like "DOG" / "dog" / "DoG".)',
             default : false
+        },
+        {
+            id : 'disableTicker',
+            info : 'Disable Ticker',
+            description : 'Check this if you want to disable the FB new feature - Ticker.<p>(<b>Ticker?</b> - Ticker shows you the things you can already see on Facebook, but in real time. )</p>',
+            default : false
+    
         }
 
 /*        { 

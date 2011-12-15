@@ -1,6 +1,6 @@
 {
     "name": "Facebook Blocker",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
     "permissions": [
         "tabs"
@@ -18,14 +18,32 @@
             ],
             "js": [
                 "public/js/jquery-1.4.2.min.js",
-                "public/js/fb_generic.js",
-                "public/js/fb_main.js"
+                "public/js/fb_generic.js"
             ],
             "css": [
                 "public/css/FBBK.css"
             ],
-            "run_at": "document_idle",
-            "all_frames" : false
+            "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "http://*.facebook.com/*", 
+                "https://*.facebook.com/*"
+            ],
+            "js": [
+                "public/js/fb_extendedBlock.js"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "http://*.facebook.com/*", 
+                "https://*.facebook.com/*"
+            ],
+            "js": [
+                "public/js/fb_main.js"
+            ],
+            "run_at": "document_idle"
         }
     ],
     "browser_action" : {
