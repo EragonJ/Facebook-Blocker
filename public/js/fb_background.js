@@ -31,7 +31,20 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         });
     }
 
-    console.log( request.method );
+    // console.log( request.method );
 });
 
-console.log( chrome.extension.getURL('public/images/128.png'));
+var src = get_ls('userOptions', true);
+
+if ( isUserOptioned('enableUnseen', src) ) {
+
+    chrome.webRequest.onBeforeRequest.addListener(function( detail ) { 
+        return {
+            cancel : true
+        };
+    }
+    , { urls : ["*://*.facebook.com/*change_read_status*"] }
+    , ["blocking"]
+    );
+
+}

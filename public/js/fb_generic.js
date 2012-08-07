@@ -22,3 +22,7 @@ function set_ls(which, value) {
         localStorage[which] = value;
     }
 }
+
+function isUserOptioned( optionID , src) {
+    return ( $.inArray( optionID, src) !== -1 ) ? true : false;
+}

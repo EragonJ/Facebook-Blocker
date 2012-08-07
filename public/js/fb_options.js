@@ -85,21 +85,27 @@ var Option = function() {
         { 
             id : 'enableUILock', 
             info : 'Enable Lock UI', 
-            description: 'Display Lock Icon when messages are locked. <p> (<b>ATTENTION</b> : If you disables it, you will not be able to unlock the message !) </p>', 
+            description: 'Display Lock Icon when messages are locked. <p> ( <b>ATTENTION</b> : If you disable this option, you will not be able to unlock messages !) </p>', 
             default : true
         },
         {
             id : 'ignoreCaseSensitive',
             info : 'Ignore Case Sensitive',
-            description : 'Enable this to make case insensitive. <p> ( Example : If you enables this, pattern - "Dog" will match any word like "DOG" / "dog" / "DoG".)',
+            description : 'Enable this to make case insensitive. <p> ( <b>Example</b> : If you enables this, pattern - "Dog" will match any word like "DOG" or "dog" or "DoG". )</p>',
             default : false
         },
         {
             id : 'disableTicker',
             info : 'Disable Ticker',
-            description : 'Check this if you want to disable the FB new feature - Ticker.<p>(<b>Ticker?</b> - Ticker shows you the things you can already see on Facebook, but in real time. )</p>',
+            description : 'Check this if you want to disable the FB new feature - Ticker.<p>( <b>Ticker?</b> - Ticker shows you the things you can already see on Facebook, but in real time. )</p>',
             default : false
     
+        },
+        {
+            id : 'enableUnseen',
+            info : 'Enable Unseen feature',
+            description : 'Enable Unseen feature can make your friends unknow whether you read the chatbox message or not<p> ( <b>ATTENTION</b>: If you enable this option, you have to restart this extension to use it. )</p>',
+            default : false
         }
 
 /*        { 

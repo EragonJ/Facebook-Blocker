@@ -4,8 +4,12 @@
     "manifest_version" : 2,
     "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
     "permissions": [
-        "tabs"
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "*://*.facebook.com/*"
     ],
+    "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
     "icons": { 
         "16": "public/images/16.png", 
         "48": "public/images/48.png", 
@@ -14,8 +18,7 @@
     "content_scripts": [
         {
             "matches": [
-                "http://*.facebook.com/*", 
-                "https://*.facebook.com/*"
+                "*://*.facebook.com/*"
             ],
             "js": [
                 "public/js/jquery-1.4.2.min.js",
@@ -28,8 +31,7 @@
         },
         {
             "matches": [
-                "http://*.facebook.com/*", 
-                "https://*.facebook.com/*"
+                "*://*.facebook.com/*"
             ],
             "js": [
                 "public/js/fb_extendedBlock.js"
@@ -38,8 +40,7 @@
         },
         {
             "matches": [
-                "http://*.facebook.com/*", 
-                "https://*.facebook.com/*"
+                "*://*.facebook.com/*"
             ],
             "js": [
                 "public/js/fb_main.js"
