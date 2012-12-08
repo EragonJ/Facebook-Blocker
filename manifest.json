@@ -11,6 +11,10 @@
         "*://*.facebook.com/*"
     ],
     "content_security_policy" : "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+    "web_accessible_resources" : [
+        "public/images/famfamfam/lock.png",
+        "public/images/famfamfam/lock_open.png"
+    ],
     "icons": { 
         "16": "public/images/16.png", 
         "48": "public/images/48.png", 
@@ -56,6 +60,11 @@
     },
     "options_page": "options.html",
     "background" : {
-        "page" : "background.html"
+        "scripts" : [
+            "public/js/jquery-1.8.3.min.js",
+            "public/js/fb_generic.js",
+            "public/js/fb_background.js",
+            "public/js/fb_analytics.js"
+        ]
     }
 }

@@ -19,17 +19,22 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     }
 });
 
-var src = get_ls('userOptions', true);
+/*
+ *  Make sure the user has 'enableUnseen' userOption so that we have to block all
+ *  requests sent to 'change_read_status'
+ */
+chrome.storage.sync.get('userOptions', function(o) {
 
-if ( isUserOptioned('enableUnseen', src) ) {
+    if ( !chrome.runtime.lastError && 
+            isUserOptioned('enableUnseen', o['userOptions']) ) {
 
-    chrome.webRequest.onBeforeRequest.addListener(function( detail ) { 
-        return {
-            cancel : true
-        };
+        chrome.webRequest.onBeforeRequest.addListener(function( detail ) { 
+            return {
+                cancel : true
+            };
+        }
+        , { urls : ["*://*.facebook.com/*change_read_status*"] }
+        , ["blocking"]
+        );
     }
-    , { urls : ["*://*.facebook.com/*change_read_status*"] }
-    , ["blocking"]
-    );
-
-}
+});

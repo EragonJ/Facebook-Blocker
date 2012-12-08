@@ -194,10 +194,6 @@ Option.prototype = {
         return $('div.option-body div:first').remove().clone();
     },
 
-    getOptionsFromLocalStorage : function() {
-        return ( get_ls('userOptions') !== undefined ) ? JSON.parse( get_ls('userOptions') ) : [];
-    },
-
     removeOptionsFromStorage : function() {
         chrome.storage.sync.remove('userOptions');
     },
@@ -218,4 +214,5 @@ Option.prototype = {
 
         chrome.storage.sync.set(o);
     }
+
 };
