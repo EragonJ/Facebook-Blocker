@@ -1,11 +1,11 @@
 $(document).ready(function() {
 
     var o = new Option();
-    o.renderOption();
+    o.render();
 
-    $('label').click( function() {
+    $(document).on('click', 'label', function() {
         toggle( $(this) );
-    })
+    });
 
     $('#default').click( function() {
         if ( confirmNext() ) {
@@ -20,7 +20,7 @@ $(document).ready(function() {
     });
 
     $('#done').click( function() {
-        o.setOptionsToLocalStorage();
+        o.setOptionsToStorage();
         closeWindow();
     })
 
@@ -43,17 +43,17 @@ function toggle( $label ) {
     var $input = $label.find('input');
 
     if ( isChecked( $input ) ) {
-        $input.attr('checked', '');
+        $input.prop('checked', '');
         nonCheckEffect( $label );
     }
     else {
-        $input.attr('checked', 'checked');
+        $input.prop('checked', 'checked');
         checkEffect( $label );
     }
 }
 
 function isChecked( $input ) {
-    return $input.attr('checked');
+    return $input.prop('checked');
 }
 
 function checkEffect( $label ) {
@@ -81,7 +81,7 @@ function clearCheckEffect( $label ) {
 var Option = function() {
 
     // TODO: finish group
-    this.optionSettings = [ 
+    this.allOptions = [ 
         { 
             id : 'enableUILock', 
             info : 'Enable Lock UI', 
@@ -124,7 +124,7 @@ var Option = function() {
     ];
 
     // User selected options
-    this.options = this.getOptionsFromLocalStorage();
+    this.userOptions = [];
 
     this.$optionTemplate = this.getOptionTemplate();
 };
@@ -132,30 +132,40 @@ var Option = function() {
 Option.prototype = {
 
     defaultOption : function() {
-        var settings = this.getOptionSettings();
+
         var that = this;
 
-        $.each( settings, function(i, obj) {
+        $.each( this.allOptions, function(i, obj) {
+
             var $input = $( '#' + obj.id );
             var $label = $input.parent('label');
 
             if ( obj['default'] === true ) {
-                $input.attr('checked', 'checked');
+                $input.prop('checked', 'checked');
                 checkEffect( $label );
             }
             else {
-                $input.attr('checked', '');    
+                $input.prop('checked', '');    
                 nonCheckEffect( $label );
+            }
+        });
+    },
+
+    render : function() {
+        var that = this;
+        chrome.storage.sync.get('userOptions', function(o) {
+            if ( !chrome.runtime.lastError ) {
+                that.userOptions = o['userOptions'];
+                that.renderOption();
             }
         });
     },
 
     renderOption : function() {
 
-        var settings = this.getOptionSettings();
         var that = this;
 
-        $.each( settings, function(i, obj) {
+        $.each( this.allOptions, function(i, obj) {
 
             var $div = that.createOption();
 
@@ -169,7 +179,7 @@ Option.prototype = {
 
         });
 
-        $.each( this.options, function(i, id) { 
+        $.each( this.userOptions, function(i, id) { 
             // can't trigger here !? weird
             toggle( $( '#' + id ).parent( 'label' ) );
         });
@@ -184,21 +194,28 @@ Option.prototype = {
         return $('div.option-body div:first').remove().clone();
     },
 
-    getOptionSettings : function() {
-        return this.optionSettings;
-    },
-
     getOptionsFromLocalStorage : function() {
         return ( get_ls('userOptions') !== undefined ) ? JSON.parse( get_ls('userOptions') ) : [];
     },
 
-    setOptionsToLocalStorage : function() {
+    removeOptionsFromStorage : function() {
+        chrome.storage.sync.remove('userOptions');
+    },
+
+    setOptionsToStorage : function() {
+
+        // remove first
+        this.removeOptionsFromStorage();
 
         var checkedIDs = [];
         $('input:checked').each(function() {
             checkedIDs.push( $(this).attr('id') );
         })
 
-        set_ls('userOptions', JSON.stringify( checkedIDs ) ); 
+        // set
+        var o = {};
+        o['userOptions'] = checkedIDs;
+
+        chrome.storage.sync.set(o);
     }
 };

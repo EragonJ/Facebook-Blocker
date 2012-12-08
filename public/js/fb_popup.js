@@ -18,7 +18,10 @@ function set_fb_list() {
         fb_list.push( eachPattern );
     });
 
-    set_ls("fb_list", fb_list);
+    var o = {};
+    o['fb_list'] = fb_list;
+
+    chrome.storage.sync.set(o);
 }
 
 /*
@@ -76,25 +79,30 @@ $(document).ready(function() {
     var $template = $(".black_list_each:eq(0)").clone();
     $(".black_list_each").remove();
 
-    var fb_list = get_ls("fb_list");
+    chrome.storage.sync.get('fb_list', function(o) {
+        if ( !chrome.runtime.lastError ) {
 
-    // If we have histories in our localStorage, then we will grab them out and create the DOMs.
-    if (typeof fb_list == "object" && fb_list.length) {
-         for (var i = 0; i < fb_list.length; i++) {
+            fb_list = o['fb_list'];
 
+            // If we have histories in our localStorage, then we will grab them out and create the DOMs.
+            if (typeof fb_list == "object" && fb_list.length) {
+                 for (var i = 0; i < fb_list.length; i++) {
+
+                        var $new_list = $template.clone();
+                        $new_list.find(".fb_list").val(fb_list[i]);
+
+                        $("#black_list").append($new_list);
+                 }
+            }
+            // Otherwise, we will create the basic one 
+            else {
                 var $new_list = $template.clone();
-                $new_list.find(".fb_list").val(fb_list[i]);
-
                 $("#black_list").append($new_list);
-         }
-    }
-    // Otherwise, we will create the basic one 
-    else {
-        var $new_list = $template.clone();
-        $("#black_list").append($new_list);
-    }
+            }
 
-    ui_input_focus(0);
+            ui_input_focus(0);
+        }
+    })
 
     /* 
      * Event settings below 

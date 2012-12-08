@@ -1,9 +1,10 @@
 {
     "name": "Facebook Blocker - FBBK",
-    "version": "1.1.4",
+    "version": "1.2.0",
     "manifest_version" : 2,
     "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
     "permissions": [
+        "storage",
         "tabs",
         "webRequest",
         "webRequestBlocking",
@@ -21,7 +22,7 @@
                 "*://*.facebook.com/*"
             ],
             "js": [
-                "public/js/jquery-1.4.2.min.js",
+                "public/js/jquery-1.8.3.min.js",
                 "public/js/fb_generic.js"
             ],
             "css": [

@@ -220,23 +220,21 @@ FBBK.prototype = {
 
         var that = this;
 
-        // Get user options first
-        chrome.extension.sendRequest( { method : 'get_user_options' }, function (response) {
+        chrome.storage.sync.get('userOptions', function( userOptionsObj ) {
 
-            if ( response['userOptions'] ) {
-                that.userOptions = response['userOptions'];
+            if ( !chrome.runtime.lastError ) {
+                that.userOptions = userOptionsObj['userOptions'];
             }
 
-            // Get blocked sentences second
-            chrome.extension.sendRequest( { method : 'get_fb_list' }, function (response) {
+            chrome.storage.sync.get('fb_list', function( fbListObj ) {
 
-                if ( response['fb_list'] ) {
-                    that.blockPatterns = response['fb_list'];
+                if ( !chrome.runtime.lastError ) {
+                    that.blockPatterns = fbListObj['fb_list'];
                 }
 
                 that.afterRequest();
-            });
-        });
+            })
+        })
     },
 
     /*

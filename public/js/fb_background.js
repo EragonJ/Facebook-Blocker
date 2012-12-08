@@ -14,24 +14,9 @@ chrome.tabs.onRemoved.addListener(function(tabID, removeInfo) {
 });
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-
-    if ( request.method === 'get_fb_list' ) {
-        sendResponse({
-            fb_list : get_ls('fb_list')
-        });
-    }
-
     if ( request.method === 'updateBadgeText' ) {
         chrome.browserAction.setBadgeText({ text : String(++badgeCount)});
     }
-
-    if ( request.method === 'get_user_options' ) {
-        sendResponse({
-            userOptions : get_ls('userOptions', true)
-        });
-    }
-
-    // console.log( request.method );
 });
 
 var src = get_ls('userOptions', true);
