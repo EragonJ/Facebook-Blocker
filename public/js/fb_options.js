@@ -24,7 +24,11 @@ $(document).ready(function() {
         closeWindow();
     })
 
-    $('.tipsy-item').tipsy({ gravity : 'w' , html : true });
+    $('.tipsy-item').tipsy({ 
+        gravity : 'w', 
+        html : true,
+        live : true
+    });
 });
 
 function closeWindow() {
