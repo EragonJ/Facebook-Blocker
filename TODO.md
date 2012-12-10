@@ -1,2 +1,3 @@
 - Refactor Code ( HIGH )
+- i18n
 - isUserOptioned combination 
