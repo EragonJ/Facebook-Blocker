@@ -29,6 +29,12 @@ $(document).ready(function() {
         html : true,
         live : true
     });
+
+
+    // i18n
+    _( $('#default'), 'UI_options_useDefaultValues');
+    _( $('#reset'), 'UI_options_resetAll');
+    _( $('#done'), 'GLOBAL_DONE');
 });
 
 function closeWindow() {
@@ -84,48 +90,7 @@ function clearCheckEffect( $label ) {
 
 var Option = function() {
 
-    // TODO: finish group
-    this.allOptions = [ 
-        { 
-            id : 'enableUILock', 
-            info : 'Enable Lock UI', 
-            description: 'Display Lock Icon when messages are locked. <p> ( <b>ATTENTION</b> : If you disable this option, you will not be able to unlock messages !) </p>', 
-            default : true
-        },
-        {
-            id : 'ignoreCaseSensitive',
-            info : 'Ignore Case Sensitive',
-            description : 'Enable this to make case insensitive. <p> ( <b>Example</b> : If you enables this, pattern - "Dog" will match any word like "DOG" or "dog" or "DoG". )</p>',
-            default : false
-        },
-        {
-            id : 'disableTicker',
-            info : 'Disable Ticker',
-            description : 'Check this if you want to disable the FB new feature - Ticker.<p>( <b>Ticker?</b> - Ticker shows you the things you can already see on Facebook, but in real time. )</p>',
-            default : false
-    
-        },
-        {
-            id : 'enableUnseen',
-            info : 'Enable Unseen feature',
-            description : 'Enable Unseen feature can make your friends unknow whether you read the chatbox message or not<p> ( <b>ATTENTION</b>: If you enable this option, you have to restart this extension to use it. )</p>',
-            default : false
-        }
-
-/*        { 
-            id : 'enableRE', 
-            info : 'Enable Regular Expression', 
-            description : 'This option is still under development', 
-            default : true 
-        },
-        { 
-            id : 'enableHotKey', 
-            info : 'Enable HotKey', 
-            description : 'This option is still under development',
-            default : true 
-        }*/
-
-    ];
+    this.allOptions = [];
 
     // User selected options
     this.userOptions = [];
@@ -155,7 +120,34 @@ Option.prototype = {
         });
     },
 
-    render : function() {
+    getAllOptions : function() {
+
+        var that = this;
+
+        $.getJSON('/models/options.json', function( result ) {
+
+            // traverse all options
+            $.each( result.options, function( _optionIndex, eachOption ) {
+
+                var eachOptionObject = eachOption;
+
+                // traverse each option
+                $.each( eachOption, function(k, v) {
+
+                    // only replace options_ variables
+                    if ( typeof v === "string" && v.match(/^options_/) ) {
+                        eachOptionObject[k] = chrome.i18n.getMessage(v);
+                    }
+                });
+
+                that.allOptions.push( eachOptionObject );
+            });
+            
+            that.getUserOptions();
+        });
+    },
+
+    getUserOptions : function() {
         var that = this;
         chrome.storage.sync.get('userOptions', function(o) {
             if ( !chrome.runtime.lastError ) {
@@ -163,6 +155,13 @@ Option.prototype = {
                 that.renderOption();
             }
         });
+    },
+
+    render : function() {
+        // getAllOptions from models -> 
+        // getUserOptions from storage -> 
+        // render options
+        this.getAllOptions()
     },
 
     renderOption : function() {

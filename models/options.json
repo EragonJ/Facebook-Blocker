@@ -1,0 +1,28 @@
+{
+    "options" : [
+        { 
+            "id" : "enableUILock", 
+            "info" : "options_enableLockUI", 
+            "description" : "options_enableLockUI_desc", 
+            "default" : true
+        },
+        {
+            "id" : "ignoreCaseSensitive",
+            "info" : "options_ignoreCaseSensitive",
+            "description" : "options_ignoreCaseSensitive_desc",
+            "default" : false
+        },
+        {
+            "id" : "disableTicker",
+            "info" : "options_disableTicker",
+            "description" : "options_disableTicker_desc",
+            "default" : false
+        },
+        {
+            "id" : "enableUnseen",
+            "info" : "options_enableUnseen",
+            "description" : "options_enableUnseen_desc",
+            "default" : false
+        }
+    ]
+}

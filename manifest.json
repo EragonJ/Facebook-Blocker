@@ -1,8 +1,9 @@
 {
-    "name": "Facebook Blocker - FBBK",
-    "version": "1.2.0",
+    "name": "__MSG_appName__",
+    "description": "__MSG_appDesc__",
+    "default_locale" : "en",
+    "version": "1.2.1",
     "manifest_version" : 2,
-    "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
     "permissions": [
         "storage",
         "tabs",

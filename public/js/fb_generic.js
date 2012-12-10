@@ -28,3 +28,13 @@
 function isUserOptioned( optionID , src) {
     return ( $.inArray( optionID, src) !== -1 ) ? true : false;
 }
+
+function _($sel, key) {
+    if ( $sel.is('input') ) {
+        console.log( $sel.val());
+        $sel.val( chrome.i18n.getMessage(key) );
+    }
+    else {
+        $sel.html( chrome.i18n.getMessage(key) );
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "appName" : {
+        "message" : "Facebook Blocker - FBBK",
+        "description" : ""
+    },
+    "appDesc" : {
+        "message" : "這是一個輕量化的外掛可以讓你在使用 Facebook 的時候阻擋自訂的垃圾訊息",
+        "description" : ""
+    },
+    "options_enableLockUI" : {
+        "message"  : "啟用鎖頭圖示"
+    },
+    "options_enableLockUI_desc" : {
+        "message" : "當訊息被阻擋的時候則出現鎖頭的圖示. <p> ( <b>注意</b> : 如果停用的話，則無法展開被阻擋的訊息。不過也沒差啦，反正都是垃圾訊息不是嗎 !?) </p>" 
+    },
+    "options_ignoreCaseSensitive" : {
+        "message" : "忽略垃圾訊息的英文大小寫差異"
+    },
+    "options_ignoreCaseSensitive_desc" : {
+        "message" : "忽略垃圾訊息的英文大小寫樣式的差異. <p> ( <b>範例</b> : 如果你啟用這個功能，則 'Dog', 'DOG', 'dog' 和 'DoG' 都會被視為一樣的樣式。)</p>"
+    },
+    "options_disableTicker" : {
+        "message" : "停用即時動態( Ticker )"
+    },
+    "options_disableTicker_desc" : {
+        "message" : "啟用它來停用 Facebook 右側「使用者即時動態」的新功能"
+    },
+    "options_enableUnseen" : {
+        "message" : "啟用「別人看不到」的功能"
+    },
+    "options_enableUnseen_desc" : {
+        "message" : "每次突然收到朋友/同事傳來的訊息時，想要裝沒看到都沒辦法，這個時候你就需要啟用這個「隱身」的功能。<p> ( <b>注意</b>: 如果你想要使用這個功能，那你需要在啟用後重開這個外掛! )</p>"
+    },
+    "UI_options_useDefaultValues" : {
+        "message" : "使用建議的預設值"
+    },
+    "UI_options_resetAll" : {
+        "message" : "全部不選"
+    },
+    "GLOBAL_DONE" : {
+        "message" : "完成"
+    }
+}

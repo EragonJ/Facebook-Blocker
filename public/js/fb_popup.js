@@ -137,4 +137,6 @@ $(document).ready(function() {
         set_fb_list();
         window.close();
     });
+
+    _($('#done'), 'GLOBAL_DONE');
 });
