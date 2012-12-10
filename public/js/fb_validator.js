@@ -6,7 +6,7 @@ var Validator = function(v) {
 
     this.v = v;
     this.patternsOf = {
-        isEmpty : '/^\s*$/',
+        isEmpty : /^\s*$/,
     };
 };
 
@@ -19,8 +19,8 @@ Validator.prototype = {
     /*
      *  This is the utility function that helps us validate the value
      */
-    isMatched : function( v, REstring ) {
-        if ( v.match( new RegExp( REstring )) ) {
+    isMatched : function( v, regex ) {
+        if ( v.match( regex ) ) {
             return true;
         }
         return false;
