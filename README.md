@@ -10,7 +10,7 @@ It is a Chrome extension that you can use specific patterns to block spams, and 
 Version
 =======
 
-1.2.1
+1.2.3
 
 Author
 ======
