@@ -1,9 +1,9 @@
 {
-  "name": "facebook-blocker",
-  "fullName": "Facebook-Blocker",
+  "name": "Facebook Blocker - FBBK",
+  "fullName": "Facebook Blocker - FBBK",
   "id": "jid1-gdRWttDxFs9a7g",
-  "description": "a basic add-on",
-  "author": "",
-  "license": "MPL 2.0",
-  "version": "0.1"
+  "description": "It is a Chrome extension that you can use specific patterns to block spams, and remove them from your wall when using Facebook",
+  "author": "EragonJ",
+  "license": "MIT",
+  "version": "0.0.1"
 }
